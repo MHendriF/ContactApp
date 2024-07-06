@@ -1,4 +1,4 @@
-package com.mhendrif.contactapp
+package com.mhendrif.contactapp.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

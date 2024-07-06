@@ -16,7 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.mhendrif.contactapp.ContactViewModel
+import com.mhendrif.contactapp.view.ContactViewModel
 import com.mhendrif.contactapp.components.AddContactDialog
 import com.mhendrif.contactapp.components.ContactItem
 import com.mhendrif.contactapp.components.CustomTopAppBar

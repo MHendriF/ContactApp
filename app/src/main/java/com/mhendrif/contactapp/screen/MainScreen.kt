@@ -15,7 +15,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.mhendrif.contactapp.ContactViewModel
+import com.mhendrif.contactapp.view.ContactViewModel
+import com.mhendrif.contactapp.navigation.Screen
 
 @Composable
 fun MainScreen(viewModel: ContactViewModel, navController: NavHostController) {

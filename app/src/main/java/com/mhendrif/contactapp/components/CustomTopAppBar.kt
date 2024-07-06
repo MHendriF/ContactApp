@@ -11,6 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import com.mhendrif.contactapp.ui.theme.BluePrimary
+import com.mhendrif.contactapp.utils.AppPreview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,8 +27,8 @@ fun CustomTopAppBar(
     TopAppBar(
         title = { Text(text = title) },
         colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            containerColor = BluePrimary,
+            titleContentColor = Color.White,
         ),
         navigationIcon = {
             if (canNavigateBack) {
@@ -38,4 +42,10 @@ fun CustomTopAppBar(
         },
         actions = actions
     )
+}
+
+@Preview
+@Composable
+fun CustomTopAppBarPreview() = AppPreview {
+    CustomTopAppBar(title = "Contact App", canNavigateBack = true)
 }

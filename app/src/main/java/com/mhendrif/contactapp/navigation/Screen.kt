@@ -1,4 +1,4 @@
-package com.mhendrif.contactapp.screen
+package com.mhendrif.contactapp.navigation
 
 sealed class Screen(val route: String) {
     object ContactList : Screen("contactList")

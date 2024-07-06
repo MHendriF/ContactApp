@@ -31,8 +31,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mhendrif.contactapp.Contact
-import com.mhendrif.contactapp.ContactViewModel
+import com.mhendrif.contactapp.data.local.entity.Contact
+import com.mhendrif.contactapp.view.ContactViewModel
 import com.mhendrif.contactapp.components.ContactActions
 import com.mhendrif.contactapp.components.ContactForm
 import com.mhendrif.contactapp.components.ContactInfo

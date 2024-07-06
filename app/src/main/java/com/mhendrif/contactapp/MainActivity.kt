@@ -11,10 +11,10 @@ import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.mhendrif.contactapp.screen.MainScreen
 import com.mhendrif.contactapp.ui.theme.ContactAppTheme
+import com.mhendrif.contactapp.view.ContactViewModel
 
 class MainActivity : ComponentActivity() {
     private val viewModel: ContactViewModel by viewModels {

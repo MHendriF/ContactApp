@@ -24,8 +24,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mhendrif.contactapp.Contact
+import com.mhendrif.contactapp.data.local.entity.Contact
+import com.mhendrif.contactapp.ui.theme.BlueSecondary
+import com.mhendrif.contactapp.utils.AppPreview
 
 @Composable
 fun ContactItem(
@@ -40,7 +43,7 @@ fun ContactItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = BlueSecondary,
         ),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
@@ -92,4 +95,15 @@ fun ContactItem(
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun ContactItemPreview() = AppPreview {
+    ContactItem(contact = Contact(
+        id = 0,
+        name = "John Doe",
+        phoneNumber = "John Doe",
+        "john.mclean@examplepetstore.com"
+    ), onClick = {})
 }
