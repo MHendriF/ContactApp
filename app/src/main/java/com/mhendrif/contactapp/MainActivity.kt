@@ -35,9 +35,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ContactAppTheme {
-                val viewModel: ContactViewModel = viewModel {
-                    ContactViewModel(ContactDatabase.getDatabase(applicationContext).contactDao())
-                }
                 val navController = rememberNavController()
 
                 LaunchedEffect(Unit) {
