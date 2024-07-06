@@ -30,13 +30,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.mhendrif.contactapp.data.local.entity.Contact
-import com.mhendrif.contactapp.view.ContactViewModel
 import com.mhendrif.contactapp.components.ContactActions
 import com.mhendrif.contactapp.components.ContactForm
 import com.mhendrif.contactapp.components.ContactInfo
 import com.mhendrif.contactapp.components.CustomTopAppBar
+import com.mhendrif.contactapp.data.local.entity.Contact
+import com.mhendrif.contactapp.utils.showToast
+import com.mhendrif.contactapp.view.ContactViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,6 +47,7 @@ fun ContactDetailScreen(
     contactId: Int,
     onNavigateBack: () -> Unit
 ) {
+    val context = LocalContext.current
     val contacts by viewModel.contacts.collectAsState()
     val contact = contacts.find { it.id == contactId }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -143,9 +146,9 @@ fun ContactDetailScreen(
                 ContactInfo(name = name, phone = phone, email = email)
                 Spacer(modifier = Modifier.height(24.dp))
                 ContactActions(
-                    onCall = { /* Implement call action */ },
-                    onMessage = { /* Implement message action */ },
-                    onEmail = { /* Implement email action */ },
+                    onCall = { showToast(context, "This feature is under development") },
+                    onMessage = { showToast(context, "This feature is under development") },
+                    onEmail = { showToast(context, "This feature is under development") },
                     onDelete = {
                         deletedContact = contact
                         viewModel.deleteContact(contact)
