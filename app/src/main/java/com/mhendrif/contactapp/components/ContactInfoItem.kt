@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mhendrif.contactapp.ui.theme.BlueSecondary
 import com.mhendrif.contactapp.utils.AppPreview
 
 @Composable
@@ -29,8 +30,8 @@ fun ContactInfoItem(icon: ImageVector, label: String, value: String) {
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
+            contentDescription = label,
+            tint = BlueSecondary
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column {
@@ -54,5 +55,5 @@ fun ContactInfoItemPreview() = AppPreview {
         icon = Icons.Default.Phone,
         label = "Phone",
         value = "123-456-7890"
-        )
+    )
 }

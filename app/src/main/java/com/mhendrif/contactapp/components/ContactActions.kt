@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -19,7 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -35,7 +34,7 @@ fun ContactActions(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             ContactActionButton(Icons.Default.Call, "Call", onCall)
-            ContactActionButton(Icons.Default.Send, "Message", onMessage)
+            ContactActionButton(Icons.AutoMirrored.Filled.Send, "Message", onMessage)
             ContactActionButton(Icons.Default.Email, "Email", onEmail)
         }
         Spacer(modifier = Modifier.height(24.dp))

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mhendrif.contactapp.ui.theme.BlueSecondary
 import com.mhendrif.contactapp.utils.AppPreview
 
 @Composable
@@ -24,7 +25,7 @@ fun ContactActionButton(icon: ImageVector, label: String, onClick: () -> Unit) {
         onClick = onClick,
         modifier = Modifier
             .size(72.dp)
-            .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+            .background(BlueSecondary, CircleShape)
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(

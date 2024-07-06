@@ -12,6 +12,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
+import com.mhendrif.contactapp.data.local.ContactDatabase
 import com.mhendrif.contactapp.screen.MainScreen
 import com.mhendrif.contactapp.ui.theme.ContactAppTheme
 import com.mhendrif.contactapp.view.ContactViewModel
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
     private val viewModel: ContactViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val database = ContactDatabase.getDatabase(applicationContext)
+                val database = ContactDatabase.getInstance(applicationContext)
                 return ContactViewModel(database.contactDao()) as T
             }
         }
