@@ -10,12 +10,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Room
 import com.mhendrif.contactapp.data.local.ContactDatabase
-import com.mhendrif.contactapp.data.repository.ContactRepository
 import com.mhendrif.contactapp.screen.MainScreen
 import com.mhendrif.contactapp.ui.theme.ContactAppTheme
-import com.mhendrif.contactapp.utils.Constants
 import com.mhendrif.contactapp.view.ContactViewModalFactory
 import com.mhendrif.contactapp.view.ContactViewModel
 

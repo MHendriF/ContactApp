@@ -20,42 +20,54 @@ import androidx.compose.ui.Modifier
 import com.mhendrif.contactapp.view.ContactViewModel
 import com.mhendrif.contactapp.components.AddContactDialog
 import com.mhendrif.contactapp.components.ContactItem
-import com.mhendrif.contactapp.components.CustomTopAppBar
+import com.mhendrif.contactapp.components.ContactTopAppBar
+import com.mhendrif.contactapp.components.EmptySearchResult
 
 @Composable
 fun ContactListScreen(
     viewModel: ContactViewModel,
     onContactClick: (Int) -> Unit
 ) {
+    val searchQuery by viewModel.searchQuery.collectAsState()
+    val searchResults by viewModel.searchResults.collectAsState()
     val contacts by viewModel.allContact.observeAsState(initial = emptyList())
     var showAddDialog by remember { mutableStateOf(false) }
+    var isSearchActive by remember { mutableStateOf(false) }
+
+    val displayedContacts = if (searchQuery.isEmpty()) contacts else searchResults
 
     Scaffold(
         topBar = {
-            CustomTopAppBar(
+            ContactTopAppBar(
                 title = "Contacts",
                 canNavigateBack = false,
+                canSearch = true,
+                isSearchActive = isSearchActive,
+                searchQuery = searchQuery,
+                onSearchQueryChange = viewModel::searchContacts,
+                onSearchActiveChange = { isSearchActive = it },
                 actions = {
                     IconButton(onClick = { showAddDialog = true }) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Add Contact"
-                        )
+                        Icon(Icons.Default.Add, contentDescription = "Add contact")
                     }
                 }
             )
         }
     ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            items(contacts) { contact ->
-                ContactItem(
-                    contact = contact,
-                    onClick = { onContactClick(contact.id) }
-                )
+        if (searchQuery.isNotEmpty() && displayedContacts.isEmpty()) {
+            EmptySearchResult(searchQuery)
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                items(displayedContacts) { contact ->
+                    ContactItem(
+                        contact = contact,
+                        onClick = { onContactClick(contact.id) }
+                    )
+                }
             }
         }
     }

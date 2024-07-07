@@ -6,14 +6,10 @@ import kotlinx.coroutines.flow.Flow
 
 class ContactRepository(private val contactDao: ContactDao) {
 
-    val allContact: Flow<List<Contact>> = contactDao.getAllContacts()
+    var allContact: Flow<List<Contact>> = contactDao.getAllContacts()
 
-    suspend fun getAllContacts() {
-        contactDao.getAllContacts()
-    }
-
-    suspend fun searchContacts(query: String) {
-        contactDao.searchContacts(query)
+    fun searchContacts(query: String): Flow<List<Contact>> {
+        return contactDao.searchContacts(query)
     }
 
     suspend fun insert(contact: Contact) {

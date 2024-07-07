@@ -1,5 +1,6 @@
 package com.mhendrif.contactapp.view
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -8,15 +9,21 @@ import androidx.lifecycle.viewModelScope
 import com.mhendrif.contactapp.data.local.entity.Contact
 import com.mhendrif.contactapp.data.repository.ContactRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class ContactViewModel(private val repository: ContactRepository) : ViewModel() {
+
     val allContact: LiveData<List<Contact>> = repository.allContact.asLiveData()
 
     private val _searchQuery = MutableStateFlow("")
-    val searchQuery: StateFlow<String> = _searchQuery
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+
+    private val _searchResults = MutableStateFlow<List<Contact>>(emptyList())
+    val searchResults: StateFlow<List<Contact>> = _searchResults.asStateFlow()
 
     private val _snackbarMessage = MutableStateFlow<String?>(null)
     val snackbarMessage: StateFlow<String?> = _snackbarMessage
@@ -33,7 +40,20 @@ class ContactViewModel(private val repository: ContactRepository) : ViewModel() 
     fun searchContacts(query: String) {
         _searchQuery.value = query
         viewModelScope.launch {
-            repository.searchContacts("%$query%")
+            if (query.isEmpty()) {
+                _searchResults.value = allContact.value ?: emptyList()
+            } else {
+                repository.searchContacts("%$query%").collect { contacts ->
+                    _searchResults.value = contacts
+                }
+            }
+            Log.d("ContactViewModel", "Search query: $query")
+        }
+    }
+
+    fun getAllContacts() {
+        viewModelScope.launch {
+            repository.getAllContacts()
         }
     }
 

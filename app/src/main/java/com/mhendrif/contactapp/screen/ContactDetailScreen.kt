@@ -32,12 +32,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mhendrif.contactapp.components.ContactActions
 import com.mhendrif.contactapp.components.ContactForm
 import com.mhendrif.contactapp.components.ContactInfo
-import com.mhendrif.contactapp.components.CustomTopAppBar
+import com.mhendrif.contactapp.components.ContactTopAppBar
 import com.mhendrif.contactapp.data.local.entity.Contact
 import com.mhendrif.contactapp.ui.theme.BluePrimary
 import com.mhendrif.contactapp.utils.showToast
@@ -93,9 +92,10 @@ fun ContactDetailScreen(
 
     Scaffold(
         topBar = {
-            CustomTopAppBar(
+            ContactTopAppBar(
                 title = if (editMode) "Edit Contact" else contact.name,
                 canNavigateBack = true,
+                canSearch = false,
                 navigateUp = onNavigateBack,
                 actions = {
                     if (!editMode) {
