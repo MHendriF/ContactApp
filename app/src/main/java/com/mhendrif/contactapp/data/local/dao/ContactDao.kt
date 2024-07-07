@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ContactDao {
-    @Query("SELECT * FROM contacts")
+    @Query("SELECT * FROM contacts ORDER BY name ASC")
     fun getAllContacts(): Flow<List<Contact>>
 
-    @Query("SELECT * FROM contacts WHERE name LIKE :searchQuery OR phoneNumber LIKE :searchQuery OR email LIKE :searchQuery")
+    @Query("SELECT * FROM contacts WHERE name LIKE :searchQuery OR phoneNumber LIKE :searchQuery OR email LIKE :searchQuery ORDER BY name ASC")
     fun searchContacts(searchQuery: String): Flow<List<Contact>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
