@@ -37,7 +37,7 @@ fun ContactForm(
     onEmailChange: (String) -> Unit,
     onSave: () -> Unit,
     onCancel: () -> Unit,
-    title: String,
+    title: String?,
     nameError: String?,
     phoneError: String?,
     emailError: String?
@@ -47,11 +47,13 @@ fun ContactForm(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        if (title != null) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
         OutlinedTextField(
             value = name,
             onValueChange = onNameChange,
@@ -122,7 +124,7 @@ fun ContactFormPreview() = AppPreview {
         onEmailChange = {},
         onSave = {},
         onCancel = {},
-        title = "Add Contact",
+        title = null,
         nameError = null,
         phoneError = null,
         emailError = null

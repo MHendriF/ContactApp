@@ -116,6 +116,7 @@ fun ContactDetailScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
+                .padding(top = 20.dp)
         ) {
             // Contact Avatar
             Box(
@@ -148,7 +149,7 @@ fun ContactDetailScreen(
                         }
                     },
                     onCancel = { editMode = false },
-                    title = "Edit Contact",
+                    title = null,
                     nameError = nameError,
                     phoneError = phoneError,
                     emailError = emailError
