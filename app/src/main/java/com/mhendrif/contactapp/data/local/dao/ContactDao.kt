@@ -2,21 +2,22 @@ package com.mhendrif.contactapp.data.local.dao
 
 import androidx.room.*
 import com.mhendrif.contactapp.data.local.entity.Contact
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ContactDao {
     @Query("SELECT * FROM contacts")
-    fun getAllContacts(): List<Contact>
+    fun getAllContacts(): Flow<List<Contact>>
 
     @Query("SELECT * FROM contacts WHERE name LIKE :searchQuery OR phoneNumber LIKE :searchQuery OR email LIKE :searchQuery")
-    fun searchContacts(searchQuery: String): List<Contact>
+    fun searchContacts(searchQuery: String): Flow<List<Contact>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertContact(contact: Contact)
+    suspend fun insert(contact: Contact)
 
     @Delete
-    suspend fun deleteContact(contact: Contact)
+    suspend fun delete(contact: Contact)
 
     @Update
-    suspend fun updateContact(contact: Contact)
+    suspend fun update(contact: Contact)
 }

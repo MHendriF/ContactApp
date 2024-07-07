@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,7 +49,7 @@ fun ContactDetailScreen(
     onNavigateBack: () -> Unit
 ) {
     val context = LocalContext.current
-    val contacts by viewModel.contacts.collectAsState()
+    val contacts by viewModel.allContact.observeAsState(initial = emptyList())
     val contact = contacts.find { it.id == contactId }
     val snackbarHostState = remember { SnackbarHostState() }
     val snackbarMessage by viewModel.snackbarMessage.collectAsState()
@@ -63,6 +64,9 @@ fun ContactDetailScreen(
     var name by remember { mutableStateOf(contact.name) }
     var phone by remember { mutableStateOf(contact.phoneNumber) }
     var email by remember { mutableStateOf(contact.email) }
+    val nameError by viewModel.nameError.collectAsState()
+    val phoneError by viewModel.phoneError.collectAsState()
+    val emailError by viewModel.emailError.collectAsState()
 
     LaunchedEffect(snackbarMessage) {
         snackbarMessage?.let {
@@ -136,11 +140,16 @@ fun ContactDetailScreen(
                     onPhoneChange = { phone = it },
                     onEmailChange = { email = it },
                     onSave = {
-                        viewModel.updateContact(contact.copy(name = name, phoneNumber = phone, email = email))
-                        editMode = false
+                        if (viewModel.validateContact(name, phone, email)) {
+                            viewModel.updateContact(contact.copy(name = name, phoneNumber = phone, email = email))
+                            editMode = false
+                        }
                     },
                     onCancel = { editMode = false },
-                    title = "Edit Contact"
+                    title = "Edit Contact",
+                    nameError = nameError,
+                    phoneError = phoneError,
+                    emailError = emailError
                 )
             } else {
                 ContactInfo(name = name, phone = phone, email = email)

@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -26,7 +27,7 @@ fun ContactListScreen(
     viewModel: ContactViewModel,
     onContactClick: (Int) -> Unit
 ) {
-    val contacts by viewModel.contacts.collectAsState()
+    val contacts by viewModel.allContact.observeAsState(initial = emptyList())
     var showAddDialog by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -65,7 +66,8 @@ fun ContactListScreen(
             onAddContact = { name, phone, email ->
                 viewModel.addContact(name, phone, email)
                 showAddDialog = false
-            }
+            },
+            viewModel = viewModel
         )
     }
 }

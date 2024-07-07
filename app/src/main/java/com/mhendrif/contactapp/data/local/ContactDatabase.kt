@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mhendrif.contactapp.data.local.entity.Contact
 import com.mhendrif.contactapp.data.local.dao.ContactDao
+import com.mhendrif.contactapp.data.repository.ContactRepository
 import com.mhendrif.contactapp.utils.Constants
 import com.mhendrif.contactapp.utils.generateDummyContacts
 import kotlinx.coroutines.CoroutineScope
@@ -19,8 +20,9 @@ abstract class ContactDatabase : RoomDatabase() {
 
     companion object {
         private var instance: ContactDatabase? = null
+        private var repository: ContactRepository? = null
 
-        fun getInstance(context: Context): ContactDatabase {
+        private fun getInstance(context: Context): ContactDatabase {
             return instance ?: synchronized(this) {
                 val newInstance = Room.databaseBuilder(
                     context.applicationContext,
@@ -35,7 +37,7 @@ abstract class ContactDatabase : RoomDatabase() {
                                 val dao = database.contactDao()
                                 val dummyContacts = generateDummyContacts()
                                 dummyContacts.forEach { contact ->
-                                    dao.insertContact(contact)
+                                    dao.insert(contact)
                                 }
                             }
                         }
@@ -45,6 +47,14 @@ abstract class ContactDatabase : RoomDatabase() {
                 instance = newInstance
                 newInstance
             }
+        }
+
+        fun getRepository(context: Context): ContactRepository {
+            if (repository == null) {
+                val database = getInstance(context)
+                repository = ContactRepository(database.contactDao())
+            }
+            return repository!!
         }
     }
 }

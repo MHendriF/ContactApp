@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mhendrif.contactapp.ui.theme.BluePrimary
 import com.mhendrif.contactapp.utils.AppPreview
 
 @Composable
@@ -36,7 +37,10 @@ fun ContactForm(
     onEmailChange: (String) -> Unit,
     onSave: () -> Unit,
     onCancel: () -> Unit,
-    title: String
+    title: String,
+    nameError: String?,
+    phoneError: String?,
+    emailError: String?
 ) {
     Column(
         modifier = Modifier
@@ -48,14 +52,15 @@ fun ContactForm(
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         OutlinedTextField(
             value = name,
             onValueChange = onNameChange,
             label = { Text("Name") },
             modifier = Modifier.fillMaxWidth(),
             leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-            singleLine = true
+            singleLine = true,
+            isError = nameError != null,
+            supportingText = { if (nameError != null) Text(nameError) }
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
@@ -65,7 +70,9 @@ fun ContactForm(
             modifier = Modifier.fillMaxWidth(),
             leadingIcon = { Icon(Icons.Default.Phone, contentDescription = null) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            singleLine = true
+            singleLine = true,
+            isError = phoneError != null,
+            supportingText = { if (phoneError != null) Text(phoneError) }
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
@@ -75,7 +82,9 @@ fun ContactForm(
             modifier = Modifier.fillMaxWidth(),
             leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            singleLine = true
+            singleLine = true,
+            isError = emailError != null,
+            supportingText = { if (emailError != null) Text(emailError) }
         )
         Spacer(modifier = Modifier.height(24.dp))
         Row(
@@ -92,7 +101,8 @@ fun ContactForm(
             Spacer(modifier = Modifier.width(16.dp))
             Button(
                 onClick = onSave,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                colors = ButtonDefaults.buttonColors(containerColor = BluePrimary)
             ) {
                 Text("Save")
             }
@@ -112,6 +122,9 @@ fun ContactFormPreview() = AppPreview {
         onEmailChange = {},
         onSave = {},
         onCancel = {},
-        title = "Add Contact"
+        title = "Add Contact",
+        nameError = null,
+        phoneError = null,
+        emailError = null
     )
 }

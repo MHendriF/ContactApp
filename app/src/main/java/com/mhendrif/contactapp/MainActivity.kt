@@ -9,23 +9,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
 import com.mhendrif.contactapp.data.local.ContactDatabase
+import com.mhendrif.contactapp.data.repository.ContactRepository
 import com.mhendrif.contactapp.screen.MainScreen
 import com.mhendrif.contactapp.ui.theme.ContactAppTheme
+import com.mhendrif.contactapp.utils.Constants
+import com.mhendrif.contactapp.view.ContactViewModalFactory
 import com.mhendrif.contactapp.view.ContactViewModel
 
 class MainActivity : ComponentActivity() {
-    private val viewModel: ContactViewModel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val database = ContactDatabase.getInstance(applicationContext)
-                return ContactViewModel(database.contactDao()) as T
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -34,13 +28,16 @@ class MainActivity : ComponentActivity() {
         var isLoading by mutableStateOf(true)
         splashScreen.setKeepOnScreenCondition { isLoading }
 
+        val repository = ContactDatabase.getRepository(applicationContext)
+        val viewModel: ContactViewModel by viewModels { ContactViewModalFactory((repository)) }
+
         setContent {
             ContactAppTheme {
                 val navController = rememberNavController()
 
                 LaunchedEffect(Unit) {
                     // Simulate some loading or initialization
-                    kotlinx.coroutines.delay(3000) // 2 seconds delay, replace with actual initialization if needed
+                    kotlinx.coroutines.delay(2000) // 2 seconds delay, replace with actual initialization if needed
                     isLoading = false
                 }
 
