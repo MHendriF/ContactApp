@@ -31,7 +31,7 @@ fun ContactInfoItem(icon: ImageVector, label: String, value: String) {
         Icon(
             imageVector = icon,
             contentDescription = label,
-            tint = BlueSecondary
+            tint = MaterialTheme.colorScheme.secondary
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column {

@@ -8,10 +8,13 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mhendrif.contactapp.data.local.entity.Contact
 import com.mhendrif.contactapp.data.repository.ContactRepository
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -37,23 +40,27 @@ class ContactViewModel(private val repository: ContactRepository) : ViewModel() 
     private val _emailError = MutableStateFlow<String?>(null)
     val emailError: StateFlow<String?> = _emailError.asStateFlow()
 
+    @OptIn(FlowPreview::class)
     fun searchContacts(query: String) {
         _searchQuery.value = query
         viewModelScope.launch {
-            if (query.isEmpty()) {
-                _searchResults.value = allContact.value ?: emptyList()
-            } else {
-                repository.searchContacts("%$query%").collect { contacts ->
-                    _searchResults.value = contacts
-                }
-            }
             Log.d("ContactViewModel", "Search query: $query")
+            _searchQuery
+                .debounce(300) // Wait for 300ms of inactivity
+                .distinctUntilChanged() // Only proceed if the query changed
+                .collect { query ->
+                    if (query.isEmpty()) {
+                        _searchResults.value = allContact.value ?: emptyList()
+                    } else {
+                        performSearch(query)
+                    }
+                }
         }
     }
 
-    fun getAllContacts() {
-        viewModelScope.launch {
-            repository.getAllContacts()
+    private suspend fun performSearch(query: String) {
+        repository.searchContacts("%$query%").collect { contacts ->
+            _searchResults.value = contacts
         }
     }
 
