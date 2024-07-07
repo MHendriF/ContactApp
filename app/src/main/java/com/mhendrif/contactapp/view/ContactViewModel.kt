@@ -1,6 +1,5 @@
 package com.mhendrif.contactapp.view
 
-import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -8,7 +7,6 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mhendrif.contactapp.data.local.entity.Contact
 import com.mhendrif.contactapp.data.repository.ContactRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,16 +30,6 @@ class ContactViewModel(private val repository: ContactRepository) : ViewModel() 
     private val _emailError = MutableStateFlow<String?>(null)
     val emailError: StateFlow<String?> = _emailError.asStateFlow()
 
-    init {
-        loadContacts()
-    }
-
-    private fun loadContacts() {
-        viewModelScope.launch() {
-            repository.getAllContacts()
-        }
-    }
-
     fun searchContacts(query: String) {
         _searchQuery.value = query
         viewModelScope.launch {
@@ -53,12 +41,14 @@ class ContactViewModel(private val repository: ContactRepository) : ViewModel() 
         val newContact = Contact(name = name, phoneNumber = phoneNumber, email = email)
         viewModelScope.launch {
             repository.insert(newContact)
+            _snackbarMessage.value = "Contact added"
         }
     }
 
     fun updateContact(contact: Contact) {
         viewModelScope.launch {
             repository.update(contact)
+            _snackbarMessage.value = "Contact update"
         }
     }
 
@@ -79,7 +69,6 @@ class ContactViewModel(private val repository: ContactRepository) : ViewModel() 
     fun clearSnackbarMessage() {
         _snackbarMessage.value = null
     }
-
 
     fun validateName(name: String): Boolean {
         return if (name.isBlank()) {

@@ -32,12 +32,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mhendrif.contactapp.components.ContactActions
 import com.mhendrif.contactapp.components.ContactForm
 import com.mhendrif.contactapp.components.ContactInfo
 import com.mhendrif.contactapp.components.CustomTopAppBar
 import com.mhendrif.contactapp.data.local.entity.Contact
+import com.mhendrif.contactapp.ui.theme.BluePrimary
 import com.mhendrif.contactapp.utils.showToast
 import com.mhendrif.contactapp.view.ContactViewModel
 
@@ -121,7 +123,7 @@ fun ContactDetailScreen(
                     .size(120.dp)
                     .align(Alignment.CenterHorizontally)
                     .padding(vertical = 16.dp)
-                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+                    .background(BluePrimary, CircleShape)
             ) {
                 Text(
                     text = contact.name.first().toString(),

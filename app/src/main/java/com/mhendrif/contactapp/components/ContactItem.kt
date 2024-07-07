@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mhendrif.contactapp.data.local.entity.Contact
+import com.mhendrif.contactapp.ui.theme.BluePrimary
 import com.mhendrif.contactapp.ui.theme.BlueSecondary
 import com.mhendrif.contactapp.utils.AppPreview
 
@@ -57,7 +58,7 @@ fun ContactItem(
             Box(
                 modifier = Modifier
                     .size(50.dp)
-                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+                    .background(BluePrimary, CircleShape)
                     .padding(8.dp)
             ) {
                 Text(
