@@ -23,17 +23,17 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mhendrif.contactapp.components.ContactActions
 import com.mhendrif.contactapp.components.ContactForm
 import com.mhendrif.contactapp.components.ContactInfo
@@ -42,6 +42,7 @@ import com.mhendrif.contactapp.data.local.entity.Contact
 import com.mhendrif.contactapp.ui.theme.BluePrimary
 import com.mhendrif.contactapp.utils.showToast
 import com.mhendrif.contactapp.view.ContactViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,11 +52,12 @@ fun ContactDetailScreen(
     onNavigateBack: () -> Unit
 ) {
     val context = LocalContext.current
-    val contacts by viewModel.allContact.observeAsState(initial = emptyList())
+    val contacts by viewModel.allContacts.collectAsStateWithLifecycle()
     val contact = contacts.find { it.id == contactId }
     val snackbarHostState = remember { SnackbarHostState() }
-    val snackbarMessage by viewModel.snackbarMessage.collectAsState()
+    val snackbarMessage by viewModel.snackbarMessage.collectAsStateWithLifecycle(null)
     var deletedContact by remember { mutableStateOf<Contact?>(null) }
+    val scope = rememberCoroutineScope()
 
     if (contact == null) {
         Text("Contact not found")
@@ -66,9 +68,9 @@ fun ContactDetailScreen(
     var name by remember { mutableStateOf(contact.name) }
     var phone by remember { mutableStateOf(contact.phoneNumber) }
     var email by remember { mutableStateOf(contact.email) }
-    val nameError by viewModel.nameError.collectAsState()
-    val phoneError by viewModel.phoneError.collectAsState()
-    val emailError by viewModel.emailError.collectAsState()
+    val nameError by viewModel.nameError.collectAsStateWithLifecycle()
+    val phoneError by viewModel.phoneError.collectAsStateWithLifecycle()
+    val emailError by viewModel.emailError.collectAsStateWithLifecycle()
 
     LaunchedEffect(snackbarMessage) {
         snackbarMessage?.let {
@@ -144,9 +146,11 @@ fun ContactDetailScreen(
                     onPhoneChange = { phone = it },
                     onEmailChange = { email = it },
                     onSave = {
-                        if (viewModel.validateContact(name, phone, email)) {
-                            viewModel.updateContact(contact.copy(name = name, phoneNumber = phone, email = email))
-                            editMode = false
+                        scope.launch {
+                            if (viewModel.validateContact(name, phone, email)) {
+                                viewModel.updateContact(contact.copy(name = name, phoneNumber = phone, email = email))
+                                editMode = false
+                            }
                         }
                     },
                     onCancel = { editMode = false },
@@ -163,9 +167,11 @@ fun ContactDetailScreen(
                     onMessage = { showToast(context, "This feature is under development") },
                     onEmail = { showToast(context, "This feature is under development") },
                     onDelete = {
-                        deletedContact = contact
-                        viewModel.deleteContact(contact)
-                        onNavigateBack()
+                        scope.launch {
+                            deletedContact = contact
+                            viewModel.deleteContact(contact)
+                            onNavigateBack()
+                        }
                     }
                 )
             }

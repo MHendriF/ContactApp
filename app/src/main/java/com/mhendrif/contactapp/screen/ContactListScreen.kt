@@ -13,16 +13,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.mhendrif.contactapp.view.ContactViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mhendrif.contactapp.components.AddContactDialog
 import com.mhendrif.contactapp.components.ContactItem
 import com.mhendrif.contactapp.components.ContactTopAppBar
 import com.mhendrif.contactapp.components.EmptySearchResult
+import com.mhendrif.contactapp.view.ContactViewModel
 
 @Composable
 fun ContactListScreen(
@@ -32,7 +32,7 @@ fun ContactListScreen(
 ) {
     val searchQuery by viewModel.searchQuery.collectAsState()
     val searchResults by viewModel.searchResults.collectAsState()
-    val contacts by viewModel.allContact.observeAsState(initial = emptyList())
+    val contacts by viewModel.allContacts.collectAsStateWithLifecycle()
     var showAddDialog by remember { mutableStateOf(false) }
     var isSearchActive by remember { mutableStateOf(false) }
 

@@ -51,7 +51,6 @@ fun ContactItem(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Avatar or icon
             Box(
                 modifier = Modifier
                     .size(50.dp)
@@ -65,10 +64,7 @@ fun ContactItem(
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
-
             Spacer(modifier = Modifier.width(16.dp))
-
-            // Contact information
             Column(
                 modifier = Modifier.weight(1f)
             ) {

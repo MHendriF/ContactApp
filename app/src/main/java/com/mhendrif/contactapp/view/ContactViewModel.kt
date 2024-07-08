@@ -1,6 +1,7 @@
 package com.mhendrif.contactapp.view
 
 import android.util.Log
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -18,9 +19,11 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+@OptIn(FlowPreview::class)
 class ContactViewModel(private val repository: ContactRepository) : ViewModel() {
 
-    val allContact: LiveData<List<Contact>> = repository.allContact.asLiveData()
+    val allContacts: StateFlow<List<Contact>> = repository.allContacts
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
@@ -29,7 +32,7 @@ class ContactViewModel(private val repository: ContactRepository) : ViewModel() 
     val searchResults: StateFlow<List<Contact>> = _searchResults.asStateFlow()
 
     private val _snackbarMessage = MutableStateFlow<String?>(null)
-    val snackbarMessage: StateFlow<String?> = _snackbarMessage
+    val snackbarMessage: StateFlow<String?> = _snackbarMessage.asStateFlow()
 
     private val _nameError = MutableStateFlow<String?>(null)
     val nameError: StateFlow<String?> = _nameError.asStateFlow()
@@ -40,22 +43,23 @@ class ContactViewModel(private val repository: ContactRepository) : ViewModel() 
     private val _emailError = MutableStateFlow<String?>(null)
     val emailError: StateFlow<String?> = _emailError.asStateFlow()
 
-    @OptIn(FlowPreview::class)
-    fun searchContacts(query: String) {
-        _searchQuery.value = query
+    init {
         viewModelScope.launch {
-            Log.d("ContactViewModel", "Search query: $query")
-            _searchQuery
-                .debounce(300) // Wait for 300ms of inactivity
-                .distinctUntilChanged() // Only proceed if the query changed
+            searchQuery
+                .debounce(300)
+                .distinctUntilChanged()
                 .collect { query ->
                     if (query.isEmpty()) {
-                        _searchResults.value = allContact.value ?: emptyList()
+                        _searchResults.value = allContacts.value
                     } else {
                         performSearch(query)
                     }
                 }
         }
+    }
+
+    fun searchContacts(query: String) {
+        _searchQuery.value = query
     }
 
     private suspend fun performSearch(query: String) {
@@ -75,7 +79,7 @@ class ContactViewModel(private val repository: ContactRepository) : ViewModel() 
     fun updateContact(contact: Contact) {
         viewModelScope.launch {
             repository.update(contact)
-            _snackbarMessage.value = "Contact update"
+            _snackbarMessage.value = "Contact updated"
         }
     }
 
@@ -87,7 +91,7 @@ class ContactViewModel(private val repository: ContactRepository) : ViewModel() 
     }
 
     fun undoDeleteContact(contact: Contact) {
-        viewModelScope.launch{
+        viewModelScope.launch {
             repository.insert(contact)
             _snackbarMessage.value = "Contact restored"
         }
@@ -124,7 +128,7 @@ class ContactViewModel(private val repository: ContactRepository) : ViewModel() 
         return if (email.isBlank()) {
             _emailError.value = "Email cannot be empty"
             false
-        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailError.value = "Invalid email format"
             false
         } else {
@@ -137,6 +141,7 @@ class ContactViewModel(private val repository: ContactRepository) : ViewModel() 
         return validateName(name) && validatePhone(phone) && validateEmail(email)
     }
 }
+
 
 class ContactViewModalFactory(private val repository: ContactRepository): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
