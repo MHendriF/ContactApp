@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.mhendrif.contactapp.screen.AboutScreen
 import com.mhendrif.contactapp.view.ContactViewModel
 import com.mhendrif.contactapp.screen.ContactDetailScreen
 import com.mhendrif.contactapp.screen.ContactListScreen
@@ -23,7 +24,8 @@ fun MainNavigation(modifier: Modifier, viewModel: ContactViewModel, navControlle
                 viewModel = viewModel,
                 onContactClick = { contactId ->
                     navController.navigate(Screen.ContactDetail.createRoute(contactId))
-                }
+                },
+                onAboutClick = { navController.navigate(Screen.About.route) },
             )
         }
         composable(
@@ -34,6 +36,11 @@ fun MainNavigation(modifier: Modifier, viewModel: ContactViewModel, navControlle
             ContactDetailScreen(
                 viewModel = viewModel,
                 contactId = contactId,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        composable(Screen.About.route) {
+            AboutScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
