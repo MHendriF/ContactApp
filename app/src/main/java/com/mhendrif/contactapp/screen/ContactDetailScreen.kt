@@ -31,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.mhendrif.contactapp.components.ContactActions
@@ -116,14 +117,14 @@ fun ContactDetailScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
-                .padding(top = 20.dp)
+                .padding(top = 40.dp)
         ) {
             // Contact Avatar
             Box(
                 modifier = Modifier
                     .size(120.dp)
+                    .clip(CircleShape)
                     .align(Alignment.CenterHorizontally)
-                    .padding(vertical = 16.dp)
                     .background(BluePrimary, CircleShape)
             ) {
                 Text(

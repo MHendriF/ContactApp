@@ -43,7 +43,7 @@ fun ContactActions(
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
         ) {
-            Icon(Icons.Default.Delete, contentDescription = null)
+            Icon(Icons.Default.Delete, contentDescription = "Icon Delete")
             Spacer(modifier = Modifier.width(8.dp))
             Text("Delete Contact")
         }

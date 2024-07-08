@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -26,7 +27,8 @@ import com.mhendrif.contactapp.components.EmptySearchResult
 @Composable
 fun ContactListScreen(
     viewModel: ContactViewModel,
-    onContactClick: (Int) -> Unit
+    onContactClick: (Int) -> Unit,
+    onAboutClick: () -> Unit,
 ) {
     val searchQuery by viewModel.searchQuery.collectAsState()
     val searchResults by viewModel.searchResults.collectAsState()
@@ -47,6 +49,9 @@ fun ContactListScreen(
                 onSearchQueryChange = viewModel::searchContacts,
                 onSearchActiveChange = { isSearchActive = it },
                 actions = {
+                    IconButton(onClick = { onAboutClick() }) {
+                        Icon(Icons.Default.Person, contentDescription = "About")
+                    }
                     IconButton(onClick = { showAddDialog = true }) {
                         Icon(Icons.Default.Add, contentDescription = "Add contact")
                     }
