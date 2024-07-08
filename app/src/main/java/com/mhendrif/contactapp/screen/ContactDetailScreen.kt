@@ -16,13 +16,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +33,6 @@ import com.mhendrif.contactapp.components.ContactActions
 import com.mhendrif.contactapp.components.ContactForm
 import com.mhendrif.contactapp.components.ContactInfo
 import com.mhendrif.contactapp.components.ContactTopAppBar
-import com.mhendrif.contactapp.data.local.entity.Contact
 import com.mhendrif.contactapp.ui.theme.BluePrimary
 import com.mhendrif.contactapp.utils.showToast
 import com.mhendrif.contactapp.view.ContactViewModel
@@ -54,9 +48,6 @@ fun ContactDetailScreen(
     val context = LocalContext.current
     val contacts by viewModel.allContacts.collectAsStateWithLifecycle()
     val contact = contacts.find { it.id == contactId }
-    val snackbarHostState = remember { SnackbarHostState() }
-    val snackbarMessage by viewModel.snackbarMessage.collectAsStateWithLifecycle(null)
-    var deletedContact by remember { mutableStateOf<Contact?>(null) }
     val scope = rememberCoroutineScope()
 
     if (contact == null) {
@@ -71,27 +62,6 @@ fun ContactDetailScreen(
     val nameError by viewModel.nameError.collectAsStateWithLifecycle()
     val phoneError by viewModel.phoneError.collectAsStateWithLifecycle()
     val emailError by viewModel.emailError.collectAsStateWithLifecycle()
-
-    LaunchedEffect(snackbarMessage) {
-        snackbarMessage?.let {
-            val result = snackbarHostState.showSnackbar(
-                message = it,
-                actionLabel = "Undo",
-                duration = SnackbarDuration.Short
-            )
-            when (result) {
-                SnackbarResult.ActionPerformed -> {
-                    deletedContact?.let { contact ->
-                        viewModel.undoDeleteContact(contact)
-                    }
-                }
-                SnackbarResult.Dismissed -> {
-                    viewModel.clearSnackbarMessage()
-                    deletedContact = null
-                }
-            }
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -112,7 +82,6 @@ fun ContactDetailScreen(
                 }
             )
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -121,7 +90,6 @@ fun ContactDetailScreen(
                 .padding(horizontal = 16.dp)
                 .padding(top = 40.dp)
         ) {
-            // Contact Avatar
             Box(
                 modifier = Modifier
                     .size(120.dp)
@@ -136,7 +104,6 @@ fun ContactDetailScreen(
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
-
             if (editMode) {
                 ContactForm(
                     name = name,
@@ -168,7 +135,6 @@ fun ContactDetailScreen(
                     onEmail = { showToast(context, "This feature is under development") },
                     onDelete = {
                         scope.launch {
-                            deletedContact = contact
                             viewModel.deleteContact(contact)
                             onNavigateBack()
                         }
